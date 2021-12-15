@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/data")
-public class DataController {
+public class ChartController {
 	@GetMapping
 	public String getData() throws IOException {
 		InputStream is = getClass().getClassLoader().getResourceAsStream("bar.json");
