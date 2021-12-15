@@ -1,64 +1,71 @@
-import React from 'react';
+import './App.css';
 import { Chart } from "react-google-charts";
-import 'chartjs-plugin-streaming';
+import React, { useState, useEffect } from "react";
+import  Sidebar from './pages/sideBar/sideBar';
+import  Header  from './pages/header/header';
 
-export default class App extends React.Component {
-	constructor(props) {
-        super(props);
-        this.state = {stockData: []};
-    }
 
-    componentDidMount() {
-        fetch('/data')
-            .then(response => response.json())
-            .then(result => this.setState({stockData: result}));
-    }
-    
-  render() {
-	const {stockData} = this.state;
-	var header = [
-		      'Year',
-		      'Open',
-		      'Close',
-		      'Low',
-		      'High'		      		      
-		    ];
-	var chartRecords = [];
-	chartRecords.push(header);
-	var chartData = stockData.map((data) => {
-		var str = data.date.split("-");
-		var dateObj = new Date(str[1]+"/"+str[2]+"/"+str[0]);
-		var year = dateObj.getFullYear().toString();
-		var open = data.open;
-		var close = data.close;
-		var low = data.low;
-		var high = data.high;		
-		
-		return [year,open,close,low,high];
-	});
+function ClientChart() {	
+	  	const [stockData, setStockData] = useState([]);
 	
-	for(var i=0;i<chartData.length;i++){
-		chartRecords.push(chartData[i]);
-	}
+	    useEffect(() => {
+	      fetchItems();
+	    }, []);
 	
-	console.log(chartRecords);
-	return (
-		    <Chart
-			  width={'100%'}
-			  height={'600px'}
-			  chartType="Line"
-			  loader={<div>Loading Chart</div>}
-			  data={chartRecords}
-			  options={{
-			    chart: {
-			      title: 'Yearly Tesla Stock Chart',
-			      subtitle: 'in Percentage(%)',
-			    },
-			    vAxis: {title: 'Stock Prices(%)', minValue: 0, maxValue: 100},
-	    		hAxis: {title: 'Years', minValue: 2000, maxValue: 2050},
-			  }}
-			  rootProps={{ 'data-testid': '3' }}
-			/>
-		  );
-	}
+	    const fetchItems = async () => {
+	      const data = await fetch('/data');
+	      const dataSet = await data.json();
+	      setStockData(dataSet);
+	    };
+	  	
+	  	var chartData = stockData.map((data,i) => {
+			var day = i+1;
+			var close = data.close;
+			console.log("Stock Data:"+data.date+","+data.open+","+data.close+","+data.high+","+data.low);
+			return [day,close];
+		});
+		var chartRecords = [];
+		chartRecords.push(['Day','Amazon']);
+	  	for(var i=0;i<chartData.length;i++){
+			chartRecords.push(chartData[i]);
+		}
+	  	//console.log(chartRecords);
+	  	var amazonData = chartRecords.slice(0, 500);
+	  
+	  const [newData, setnewData] = useState(chartRecords);
+	  const [memoryData, setnewMemoryData] = useState(chartRecords);
+	
+	  function updateData(updatedArr) {
+	    setnewData(updatedArr);
+	    setnewMemoryData(updatedArr);
+	  }
+	
+	  function timelineUpdate(newTimeFrame) {
+	    setnewData(newTimeFrame);
+	  }
+	
+	  return (
+	    <>
+	
+	      <Sidebar parentCallback={updateData} chartValue={newData} />
+	      <center>
+	        <Header headerParentCall={timelineUpdate} completeData = {memoryData} />
+	        <Chart
+	          width={'1000px'}
+	          height={'550px'}
+	          chartType="Line"
+	          loader={<div>Loading Chart</div>}
+	          data={amazonData}
+	          options={{
+	            chart: {
+	              title: 'Current Market Price of Share',
+	              subtitle: 'in millions of dollars (USD)',
+	            },
+	          }}
+	          rootProps={{ 'data-testid': '3' }}
+	        /></center>
+	    </>
+	  );
 }
+
+export default ClientChart;
