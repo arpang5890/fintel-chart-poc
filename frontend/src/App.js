@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import ClientList from './ClientList';
 import ClientEdit from "./ClientEdit";
 import ClientChart from "./ClientChart";
-import useGoogleCharts from './useGoogleCharts';
 
 class App extends Component {
   render() {

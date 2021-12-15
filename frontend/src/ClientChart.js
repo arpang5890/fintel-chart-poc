@@ -3,6 +3,7 @@ import { Chart } from "react-google-charts";
 import React, { useState, useEffect } from "react";
 import  Sidebar from './pages/sideBar/sideBar';
 import  Header  from './pages/header/header';
+// import { date } from 'superstruct';
 
 
 function ClientChart() {	
@@ -16,46 +17,46 @@ function ClientChart() {
 	      const data = await fetch('/data');
 	      const dataSet = await data.json();
 	      setStockData(dataSet);
-	    };
-	  	
-	  	var chartData = stockData.map((data,i) => {
-			var day = i+1;
-			var close = data.close;
-			console.log("Stock Data:"+data.date+","+data.open+","+data.close+","+data.high+","+data.low);
-			return [day,close];
-		});
-		var chartRecords = [];
-		chartRecords.push(['Day','Amazon']);
-	  	for(var i=0;i<chartData.length;i++){
-			chartRecords.push(chartData[i]);
-		}
-	  	//console.log(chartRecords);
-	  	var amazonData = chartRecords.slice(0, 500);
-	  
-	  const [newData, setnewData] = useState(chartRecords);
-	  const [memoryData, setnewMemoryData] = useState(chartRecords);
-	
+			};
+			// async make the stockData null initially */
+			/*var firstData = stockData;
+			firstData = firstData.slice(Math.max(firstData.length - 500, 1));
+			const chartHeading = [['Date', 'Open']];
+			var chartFirstData = firstData.map((data) => {
+					return [data.date, data.open];
+			});
+			const firstState =  [...chartHeading, ...chartFirstData];
+		*/
+		
+		// const [newData, setnewData] = useState([...firstState]);
+		const [newData, setnewData] = useState([]);
+		const [timeLine, setTimeLine] = useState(500);
 	  function updateData(updatedArr) {
 	    setnewData(updatedArr);
-	    setnewMemoryData(updatedArr);
 	  }
 	
 	  function timelineUpdate(newTimeFrame) {
-	    setnewData(newTimeFrame);
+			var previousData = newData;
+			const labelData = previousData.slice(0,1);
+			const remainingData = previousData.slice(Math.max(previousData.length - newTimeFrame, 1));
+			// newDisplayValue = newDisplayValue.slice(Math.max(newDisplayValue.length - completeTimeFrame, 1));
+			const updateChart = [...labelData, ...remainingData];
+			setnewData(updateChart);
+			setTimeLine(newTimeFrame);
 	  }
 	
 	  return (
 	    <>
 	
-	      <Sidebar parentCallback={updateData} chartValue={newData} />
+	      <Sidebar parentCallback={updateData} chartValue={stockData} timeFrame={timeLine} updatedChartValue = {newData} />
 	      <center>
-	        <Header headerParentCall={timelineUpdate} completeData = {memoryData} />
+	        <Header headerParentCall={timelineUpdate} />
 	        <Chart
 	          width={'1000px'}
 	          height={'550px'}
 	          chartType="Line"
 	          loader={<div>Loading Chart</div>}
-	          data={amazonData}
+	          data={newData}
 	          options={{
 	            chart: {
 	              title: 'Current Market Price of Share',

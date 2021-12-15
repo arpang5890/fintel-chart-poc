@@ -2,11 +2,8 @@ import React from 'react';
 import './header.css';
 
 const Header = (props) => {
-    const comP = [...props.completeData];
-
     const handleTimeLine = (element) => {
         var timeFrame;
-        console.log(element.target.innerHTML);
         switch(element.target.innerHTML) {
             case '1m':
                 timeFrame = 30;
@@ -19,15 +16,14 @@ const Header = (props) => {
                 break;
             case '1 year':
                 timeFrame = 365;
-                break;
+                break;  
             default:
                 timeFrame = 500;
 
         }
-        console.log(timeFrame);
-        const newComp = comP.slice(0, timeFrame);
         
-        props.headerParentCall(newComp);
+        
+        props.headerParentCall(timeFrame);
     }
     return (
         <>
