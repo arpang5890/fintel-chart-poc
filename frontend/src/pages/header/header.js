@@ -22,8 +22,8 @@ const Header = (props) => {
 
         }
         
-        
-        props.headerParentCall(timeFrame);
+        console.log("------Time line "+timeFrame);        
+        props.headerParentCall(30);
     }
     return (
         <>

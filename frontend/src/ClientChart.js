@@ -19,24 +19,27 @@ function ClientChart() {
 	      setStockData(dataSet);
 			};
 			// async make the stockData null initially */
-			/*var firstData = stockData;
+			var firstData = stockData;
+			
 			firstData = firstData.slice(Math.max(firstData.length - 500, 1));
-			const chartHeading = [['Date', 'Open']];
-			var chartFirstData = firstData.map((data) => {
-					return [data.date, data.open];
+			var chartHeading = [['Date', 'Open']];
+			var chartFirstData = firstData.map((data) => {				
+				return [data.date, data.open];
 			});
-			const firstState =  [...chartHeading, ...chartFirstData];
-		*/
+			
+			var firstState =  [...chartHeading, ...chartFirstData];
+			
 		
 		// const [newData, setnewData] = useState([...firstState]);
 		const [newData, setnewData] = useState([]);
 		const [timeLine, setTimeLine] = useState(500);
+		
 	  function updateData(updatedArr) {
-	    setnewData(updatedArr);
+	    setnewData(updatedArr);	    
 	  }
 	
 	  function timelineUpdate(newTimeFrame) {
-			var previousData = newData;
+			var previousData = firstState;
 			const labelData = previousData.slice(0,1);
 			const remainingData = previousData.slice(Math.max(previousData.length - newTimeFrame, 1));
 			// newDisplayValue = newDisplayValue.slice(Math.max(newDisplayValue.length - completeTimeFrame, 1));
@@ -56,7 +59,7 @@ function ClientChart() {
 	          height={'550px'}
 	          chartType="Line"
 	          loader={<div>Loading Chart</div>}
-	          data={newData}
+	          data={newData.length===0?firstState:newData}
 	          options={{
 	            chart: {
 	              title: 'Current Market Price of Share',
