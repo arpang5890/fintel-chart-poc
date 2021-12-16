@@ -5,7 +5,7 @@ const Sidebar= (props) => {
     
     const [checkedState, setCheckedState] = useState([true, false, false, false]);
     var completeData = [...props.chartValue];
-    //const completeTimeFrame = props.timeFrame;
+    const completeTimeFrame = props.timeFrame;
 
     completeData = completeData.slice(Math.max(completeData.length - 500, 1));
     const headingArr = [['Date', 'Open']];
@@ -26,10 +26,8 @@ const Sidebar= (props) => {
     
     var displayChartArr = [];
     if(newDisplayValue.length === 0) {
-		console.log("TRUE");
         displayChartArr = [...headingArr, ...initialData];
     } else {
-		console.log("False");
         displayChartArr = [...newDisplayValue];
     }
     
@@ -44,8 +42,7 @@ const Sidebar= (props) => {
             (index === element.target.value-1) ? !item : item
         );
         setCheckedState(updateCheckedState);
-        console.log(checkedState);
-        console.log(updateCheckedState);
+        
         switch(element.target.value) {
             case '1':
                 merge = St1;
@@ -65,23 +62,23 @@ const Sidebar= (props) => {
         }
 
         if(element.target.checked) {
+            const firstElement = merge.slice(0,1);
+            const newMerge = merge.slice(Math.max(merge.length - completeTimeFrame, 1));
+            const updatedMerge = [...firstElement, ...newMerge];
             displayChartArr.map((data,index) => {
-                data.push(merge[index]);
+                data.push(updatedMerge[index]);
                 return data;
             });
-            //  const findIndex = displayChartArr[0].indexOf(merge[0]);
-            // console.log("Merge "+merge[0]+"--"+findIndex+"---"+displayChartArr);
         } else {
             const findIndex = displayChartArr[0].indexOf(merge[0]);
-             // console.log("Merge "+merge[0]+"--"+findIndex+"---"+displayChartArr);
             displayChartArr.map((data) => {
                 data.splice(findIndex,1);
                 return data;
             });
-            // console.log(displayChartArr);
-        }
 
-        props.parentCallback(displayChartArr);
+        }
+        
+        props.parentCallback(displayChartArr, updateCheckedState);
 
     }
 

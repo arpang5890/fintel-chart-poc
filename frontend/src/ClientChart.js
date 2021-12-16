@@ -20,32 +20,65 @@ function ClientChart() {
 			};
 			// async make the stockData null initially */
 			var firstData = stockData;
-			
+			var openDataCollection =['open'];
+			var closeDataCollection = ['close'];
+			var highDataCollection = ['high'];
+			var lowDataCollection = ['low'];
+
 			firstData = firstData.slice(Math.max(firstData.length - 500, 1));
 			var chartHeading = [['Date', 'Open']];
-			var chartFirstData = firstData.map((data) => {				
+			var chartFirstData = firstData.map((data) => {
+				openDataCollection.push(data.open);
+				closeDataCollection.push(data.close);
+				highDataCollection.push(data.high);
+				lowDataCollection.push(data.low);
+
 				return [data.date, data.open];
 			});
-			
+			var firstCohlData = [openDataCollection, closeDataCollection, highDataCollection, lowDataCollection];
 			var firstState =  [...chartHeading, ...chartFirstData];
-			
-		
-		// const [newData, setnewData] = useState([...firstState]);
+
 		const [newData, setnewData] = useState([]);
 		const [timeLine, setTimeLine] = useState(500);
-		
-	  function updateData(updatedArr) {
+		const [checkBoxData, setcheckBoxData] = useState([true, false, false, false]);
+ 
+	  function updateData(updatedArr, checkBoxValues) {
+			setcheckBoxData(checkBoxValues);
 	    setnewData(updatedArr);	    
 	  }
 	
 	  function timelineUpdate(newTimeFrame) {
-			var previousData = newData;
-			const labelData = previousData.slice(0,1);
-			const remainingData = previousData.slice(Math.max(previousData.length - newTimeFrame, 1));
-			// newDisplayValue = newDisplayValue.slice(Math.max(newDisplayValue.length - completeTimeFrame, 1));
-			const updateChart = [...labelData, ...remainingData];
-			setnewData(updateChart);
-			setTimeLine(newTimeFrame);
+
+			var dataForManipulation;
+			if(timeLine >= newTimeFrame) {
+				dataForManipulation = newData;
+			} else {
+				var updatedFirstState = firstState;
+				updatedFirstState.map((mData) => {
+					mData.splice(1, 1);
+					return mData;
+				});
+				const updatedCheckBoxData = checkBoxData;
+
+				for(var i = 0; i < updatedCheckBoxData.length; i++) {
+						if(updatedCheckBoxData[i]) {
+							const valToAdd = firstCohlData[i];
+							updatedFirstState.map((UFSdata,UFSindex) => {
+                UFSdata.push(valToAdd[UFSindex]);
+                return UFSdata;
+            	});
+						}
+				}				
+
+				dataForManipulation = updatedFirstState;
+			}
+
+				var previousData = dataForManipulation;
+				const labelData = previousData.slice(0,1);
+				const remainingData = previousData.slice(Math.max(previousData.length - newTimeFrame, 1));
+				const updateChart = [...labelData, ...remainingData];
+				setnewData(updateChart);
+				setTimeLine(newTimeFrame);	
 	  }
 	
 	  return (
