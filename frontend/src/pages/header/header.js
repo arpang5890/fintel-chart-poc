@@ -20,10 +20,8 @@ const Header = (props) => {
             default:
                 timeFrame = 500;
 
-        }
-        
-        console.log("------Time line "+timeFrame);        
-        props.headerParentCall(30);
+        }     
+        props.headerParentCall(timeFrame);
     }
     return (
         <>

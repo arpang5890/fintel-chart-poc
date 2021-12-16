@@ -1,8 +1,9 @@
-import React, {useEffect} from 'react';
+import React, {useState} from 'react';
 import './sideBar.css';
 
 const Sidebar= (props) => {
-
+    
+    const [checkedState, setCheckedState] = useState([true, false, false, false]);
     var completeData = [...props.chartValue];
     //const completeTimeFrame = props.timeFrame;
 
@@ -39,9 +40,16 @@ const Sidebar= (props) => {
 
     const handleChange = (element) => {
         var merge;
+        const updateCheckedState =  checkedState.map((item, index) => 
+            (index === element.target.value-1) ? !item : item
+        );
+        setCheckedState(updateCheckedState);
+        console.log(checkedState);
+        console.log(updateCheckedState);
         switch(element.target.value) {
             case '1':
                 merge = St1;
+
                 break;
             case '2':
                 merge = St2;                            
@@ -61,16 +69,16 @@ const Sidebar= (props) => {
                 data.push(merge[index]);
                 return data;
             });
-             const findIndex = displayChartArr[0].indexOf(merge[0]);
-            console.log("Merge "+merge[0]+"--"+findIndex+"---"+displayChartArr);
+            //  const findIndex = displayChartArr[0].indexOf(merge[0]);
+            // console.log("Merge "+merge[0]+"--"+findIndex+"---"+displayChartArr);
         } else {
             const findIndex = displayChartArr[0].indexOf(merge[0]);
-            console.log("Merge "+merge[0]+"--"+findIndex+"---"+displayChartArr);
+             // console.log("Merge "+merge[0]+"--"+findIndex+"---"+displayChartArr);
             displayChartArr.map((data) => {
                 data.splice(findIndex,1);
                 return data;
             });
-            console.log(displayChartArr);
+            // console.log(displayChartArr);
         }
 
         props.parentCallback(displayChartArr);
@@ -81,13 +89,13 @@ const Sidebar= (props) => {
         <div class="sidenav">
             <span className="f18">Stock List</span>
             <hr/>
-            <input type="checkbox" id="openPrice" onChange={ele => handleChange(ele)} name="openPrice" value="1" checked="checked"/>
+            <input type="checkbox" id="openPrice" onChange={ele => handleChange(ele)} name="openPrice" value="1" checked={checkedState[0]} />
             <label for="openPrice"> Open</label><br/>
-            <input type="checkbox" id="closePrice" onChange={ele => handleChange(ele)} name="closePrice" value="2"/>
+            <input type="checkbox" id="closePrice" onChange={ele => handleChange(ele)} name="closePrice" value="2" checked={checkedState[1]} />
             <label for="closePrice"> Close</label><br/>
-            <input type="checkbox" id="highPrice"  onChange={ele => handleChange(ele)} name="highPrice" value="3"/>
+            <input type="checkbox" id="highPrice"  onChange={ele => handleChange(ele)} name="highPrice" value="3" checked={checkedState[2]} />
             <label for="highPrice"> High</label><br/>
-            <input type="checkbox" id="lowPrice"  onChange={ele => handleChange(ele)} name="lowPrice" value="4"/>
+            <input type="checkbox" id="lowPrice"  onChange={ele => handleChange(ele)} name="lowPrice" value="4" checked={checkedState[3]}/>
             <label for="lowPrice"> Low</label><br/>
         </div>
     );

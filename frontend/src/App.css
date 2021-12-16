@@ -40,3 +40,13 @@
 .container, .container-fluid {
   margin-top: 20px;
 }
+
+.block {
+  height: 300px;
+  width: auto;
+  margin-top : 80px;
+  font-size: 18px;
+  font-weight: bold;
+  color: grey;
+  align-content: center;
+}

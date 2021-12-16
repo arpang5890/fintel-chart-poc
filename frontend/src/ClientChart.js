@@ -39,7 +39,7 @@ function ClientChart() {
 	  }
 	
 	  function timelineUpdate(newTimeFrame) {
-			var previousData = firstState;
+			var previousData = newData;
 			const labelData = previousData.slice(0,1);
 			const remainingData = previousData.slice(Math.max(previousData.length - newTimeFrame, 1));
 			// newDisplayValue = newDisplayValue.slice(Math.max(newDisplayValue.length - completeTimeFrame, 1));
@@ -54,6 +54,7 @@ function ClientChart() {
 	      <Sidebar parentCallback={updateData} chartValue={stockData} timeFrame={timeLine} updatedChartValue = {newData} />
 	      <center>
 	        <Header headerParentCall={timelineUpdate} />
+					{ (newData.length === 0 || newData[0].length > 1) ?
 	        <Chart
 	          width={'1000px'}
 	          height={'550px'}
@@ -67,7 +68,7 @@ function ClientChart() {
 	            },
 	          }}
 	          rootProps={{ 'data-testid': '3' }}
-	        /></center>
+	        />   : <div class="block"> Please select any value to view chart </div>}</center>
 	    </>
 	  );
 }
