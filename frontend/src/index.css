@@ -11,3 +11,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.redTicker {
+  background-color: red;
+  padding: 2px;
+}
+
+.greenTicker {
+  background-color: green;
+  padding: 2px;
+}
