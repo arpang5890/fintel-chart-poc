@@ -25,7 +25,7 @@ const OptionFlow = () => {
     var putCount = 0;
     // fetching only entitled Trade data
     rawData.map((eachRow, index) => {
-      if(eachRow._index === 'entitled-trade-alerts') {
+      if(eachRow._index === 'non-entitled-trade-alerts') {
          processedDataForTable.push(eachRow._source);
          (eachRow._source.put_call === 'P') ? putCount++ : callCount++;
       }
@@ -201,8 +201,7 @@ const OptionFlow = () => {
 
     <Table striped hover variant="dark">
       <thead>
-        <tr>
-          <th>Time</th>
+        <tr>          
           <th>Ticker</th>
           <th>Expiry</th>
           <th>Strike</th>
@@ -215,12 +214,11 @@ const OptionFlow = () => {
       </thead>
       <tbody>
         {tableData.map((product, index) => (
-          <tr key={index} data-index={index}>
-            <td>{product.time}</td>
-            <td><span className={ (index%2 === 0) ? "redTicker": "greenTicker"}> {product.usymbol}</span></td>
+          <tr key={index} data-index={index}>            
+            <td><span className={ (product.contract_type === 'CALLS') ? "greenTicker":"redTicker"}> {product.symbol}</span></td>
             <td>{product.expiry}</td>
             <td>{product.strike}</td>
-            <td>{product.put_call}</td>
+            <td>{product.contract_type}</td>
             <td>{product.spot}</td>
             <td>{product.details}</td>
             <td>{product.type}</td>
